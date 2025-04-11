@@ -123,9 +123,9 @@ function generateParty() {
   font-size: 12px;
   font-weight: bold;
 ">
-                <div style="color: white; font-size: 15px;">${roleIcon} ${roleLabel}</div>
-                <div style="color: gold; text-align: right; font-size: 13px; line-height: 1.2;">
-    <div>${c.power}</div>
+                <div style="color: white; font-size: 13px;">${roleIcon} ${roleLabel}</div>
+  <div style="color: gold; text-align: right; line-height: 1.2;">
+    <div style="font-size:  15px;">${c.power}</div>
     <div>${starOverlay}</div>
   </div>
 
@@ -137,7 +137,7 @@ function generateParty() {
         return `
           <div style="width: 220px; display: flex; flex-direction: column; align-items: flex-start;">
             ${imageElement}
-            <div style="margin-top: 10px; text-align: left;">
+            <div style="margin-top: 10px; text-align: left; display: none;">
               <p><strong>${roleIcon} ${roleLabel}</strong></p>
               <p>${c.id}</p>
             </div>
