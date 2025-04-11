@@ -13,7 +13,8 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
       id: c.id,
       class: c.class,
       power: Number(c.power),
-      thumbnail: c.thumbnail || null
+      thumbnail: c.thumbnail || null,
+      msg: c.msg || ""
     }));
     console.log("✅ 캐릭터 로딩 완료", characters);
   })
@@ -95,6 +96,9 @@ function generateParty() {
     const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
     const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
 
+    const messageText = c.msg.replace(/\n/g, '<br>');
+    const messageCenter = c.msg ? `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; padding: 6px 10px; border-radius: 6px; text-align: center; max-width: 90%; font-family: 'Nanum Myeongjo', 'serif';">&quot;${messageText}&quot;</div>` : "";
+
     const bottomOverlay = `
       <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 140px; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 15px 15px; box-sizing: border-box; font-size: 12px; font-weight: bold;">
         <div style="color: white; font-size: 13px;">${roleIcon} ${roleLabel}</div>
@@ -105,12 +109,12 @@ function generateParty() {
       </div>
     `;
 
-    card.innerHTML = inner + topLeft + topRight + bottomOverlay;
+    card.innerHTML = inner + topLeft + topRight + messageCenter + bottomOverlay;
     cardWrapper.appendChild(card);
     container.appendChild(cardWrapper);
 
     setTimeout(() => {
-      const spreadX = (i - 1.5) * 50; // 줄어든 퍼짐 거리
+      const spreadX = (i - 1.5) * 50;
       card.style.opacity = "1";
       card.style.transform = `scale(1) translateX(${spreadX}px) rotateY(360deg)`;
     }, i * 400);
