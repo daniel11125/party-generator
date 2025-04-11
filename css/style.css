@@ -17,6 +17,19 @@ button {
   border-radius: 5px;
 }
 
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    justify-content: center;
+  }
+
+  @media (max-width: 600px) {
+    .card-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
 #party {
   margin-top: 2rem;
   line-height: 1.6;
