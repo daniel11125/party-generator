@@ -16,7 +16,14 @@ button {
   color: white;
   border-radius: 5px;
 }
-
+.logo {
+	margin-top: 50px;
+}
+.logo svg {
+	fill : #fff;
+	    transform: scale(2);
+    transform-origin: left;
+}
 
 
   @media (max-width: 600px) {

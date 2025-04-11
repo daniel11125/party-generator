@@ -1,5 +1,8 @@
 let characters = [];
 
+
+
+
 const roleMap = {
   "힐러": ["힐러", "사제", "음유시인"],
   "탱커": ["전사", "대검전사", "빙결술사", "수도사"],
@@ -17,6 +20,9 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
       msg: c.msg || ""
     }));
     console.log("✅ 캐릭터 로딩 완료", characters);
+
+   showAllMembers();
+
   })
   .catch(err => {
     console.error("❌ 캐릭터 데이터 불러오기 실패", err);
@@ -75,9 +81,13 @@ function showAllMembers() {
     card.style.transform = "scale(0.7) translateX(0)";
     card.style.transition = "all 0.6s ease";
 
-    const inner = c.thumbnail
-      ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
-      : `<div style="width:100%; height:100%; background:#ccc;"></div>`;
+	const inner = c.thumbnail
+	  ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
+	  : `
+		<div style="width: 100%; height: 100%; background: #eee; display: flex; justify-content: center; align-items: center;">
+		  <img src="./img/logo.svg" alt="default-logo" style="width: 100px; height: auto;">
+		</div>
+	  `;
 
     const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
     const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
@@ -160,9 +170,13 @@ function generateParty() {
     card.style.transform = "scale(0.7) translateX(0)";
     card.style.transition = "all 0.6s ease";
 
-    const inner = c.thumbnail
-      ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
-      : `<div style="width:100%; height:100%; background:#ccc;"></div>`;
+	const inner = c.thumbnail
+	  ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
+	  : `
+		<div style="width: 100%; height: 100%; background: #eee; display: flex; justify-content: center; align-items: center;">
+		  <img src="./img/logo.svg" alt="default-logo" style="width: 100px; height: auto;">
+		</div>
+	  `;
 
     const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
     const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
@@ -237,9 +251,16 @@ function showAllMembers() {
     card.style.transform = "scale(0.7) translateY(50px)";
     card.style.transition = "all 0.6s ease";
 
-    const inner = c.thumbnail
-      ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
-      : `<div style="width:100%; height:100%; background:#ccc;"></div>`;
+
+
+	const inner = c.thumbnail
+	  ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
+	  : `
+		<div style="width: 100%; height: 100%; background: #eee; display: flex; justify-content: center; align-items: center;">
+		  <img src="./img/logo.svg" alt="default-logo" style="width: 100px; height: auto;">
+		</div>
+	  `;
+
 
     const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
     const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
