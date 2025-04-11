@@ -82,8 +82,8 @@ function generateParty() {
             <!-- 좌측 상단 클래스명 -->
             <div style="
               position: absolute;
-              top: 6px;
-              left: 8px;
+              top: 15px;
+              left: 15px;
               background: rgba(0, 0, 0, 0.5);
               color: white;
               font-size: 13px;
@@ -93,25 +93,38 @@ function generateParty() {
               ${c.class}
             </div>
 
+            <div style="
+              position: absolute;
+              top: 15px;
+              right: 15px;
+              background: rgba(0, 0, 0, 0.5);
+              color: white;
+              font-size: 13px;
+              padding: 2px 6px;
+              border-radius: 4px;
+            ">
+              ${c.id}
+            </div>
+
+
             <!-- 하단 오버레이: 역할 / 전투력 / 별 -->
             <div style="
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 70px;
+  height: 140px;
   background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 10px 8px 24px;
+  padding: 10px 15px 15px;
   box-sizing: border-box;
   font-size: 12px;
   font-weight: bold;
 ">
-                <div style="color: white;">${roleIcon} ${roleLabel}</div>
-
-                <div style="color: gold; text-align: right; line-height: 1.2;">
+                <div style="color: white; font-size: 15px;">${roleIcon} ${roleLabel}</div>
+                <div style="color: gold; text-align: right; font-size: 13px; line-height: 1.2;">
     <div>${c.power}</div>
     <div>${starOverlay}</div>
   </div>
