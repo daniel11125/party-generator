@@ -17,18 +17,22 @@ button {
   border-radius: 5px;
 }
 
-  .card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    justify-content: center;
-  }
+
 
   @media (max-width: 600px) {
     .card-container {
       grid-template-columns: repeat(2, 1fr);
     }
   }
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
 
 #party {
   margin-top: 2rem;
@@ -59,3 +63,5 @@ button {
     opacity: 1;
     transform: scale(1);
   }
+
+
