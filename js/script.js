@@ -54,31 +54,27 @@ function generateParty() {
   const totalPower = selected.reduce((sum, c) => sum + c.power, 0);
 
   const html = `
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-    ${selected.map((c, i) => {
-      const role = i < 2 ? "🗡️ 딜러" : i === 2 ? "🛡️ 탱커" : "✨ 힐러";
-      const imageElement = c.thumbnail
-        ? `<img src="${c.thumbnail}" alt="${c.id}" width="200" height="200" style="border-radius: 8px; object-fit: cover;" />`
-        : `<div style="width:200px; height:200px; background:#ccc; border-radius:8px;"></div>`;
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+      ${selected.map((c, i) => {
+        const role = i < 2 ? "🗡️ 딜러" : i === 2 ? "🛡️ 탱커" : "✨ 힐러";
+        const imageElement = c.thumbnail
+          ? `<img src="${c.thumbnail}" alt="${c.id}" width="200" height="200" style="border-radius: 8px; object-fit: cover;" />`
+          : `<div style="width:200px; height:200px; background:#ccc; border-radius:8px;"></div>`;
 
-      return `
-        <div style="width: 220px; display: flex; flex-direction: column; align-items: flex-start;">
-          ${imageElement}
-          <div style="margin-top: 10px; text-align: left;">
-            <p><strong>${role}</strong></p>
-            <p>${c.id} (${c.class})</p>
-            <p>전투력: ${c.power}</p>
+        return `
+          <div style="width: 220px; display: flex; flex-direction: column; align-items: flex-start;">
+            ${imageElement}
+            <div style="margin-top: 10px; text-align: left;">
+              <p><strong>${role}</strong></p>
+              <p>${c.id} (${c.class})</p>
+              <p>전투력: ${c.power}</p>
+            </div>
           </div>
-        </div>
-      `;
-    }).join("")}
-  </div>
-`;
+        `;
+      }).join("")}
+    </div>
+    <p style="margin-top: 30px; text-align: center;"><strong>⚔️ 총 전투력: ${totalPower}</strong></p>
+  `;
 
-  }).join("");
-
-document.getElementById("party").innerHTML = `
-  ${html}
-  <p style="margin-top: 30px;"><strong>⚔️ 총 전투력: ${totalPower}</strong></p>
-`;
+  document.getElementById("party").innerHTML = html;
 }
