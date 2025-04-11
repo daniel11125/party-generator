@@ -60,7 +60,8 @@ function generateParty() {
   const html = `
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
       ${selected.map((c, i) => {
-        const role = i < 2 ? "🗡️ 딜러" : i === 2 ? "🛡️ 탱커" : "✨ 힐러";
+        const roleIcon = i < 2 ? "🗡️" : i === 2 ? "🛡️" : "✨";
+        const roleLabel = i < 2 ? "딜러" : i === 2 ? "탱커" : "힐러";
 
         // ⭐ 별 개수 계산
         let stars = 3;
@@ -69,7 +70,7 @@ function generateParty() {
         if (c.power >= 23000) stars = 6;
         const starOverlay = '★'.repeat(stars);
 
-        // 카드 이미지 + 별 오버레이
+        // 카드 이미지 + 클래스명 + 하단 정보
         const imageElement = `
           <div style="width:200px; height:320px; position: relative; border-radius: 8px; overflow: hidden;">
             ${
@@ -77,18 +78,39 @@ function generateParty() {
                 ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
                 : `<div style="width:100%; height:100%; background:#ccc;"></div>`
             }
+
+            <!-- 좌측 상단 클래스명 -->
             <div style="
               position: absolute;
-              bottom: 8px;
-              right: 8px;
-              background: rgba(0,0,0,0.6);
-              color: gold;
-              font-size: 16px;
+              top: 6px;
+              left: 8px;
+              background: rgba(0, 0, 0, 0.5);
+              color: white;
+              font-size: 13px;
               padding: 2px 6px;
               border-radius: 4px;
+            ">
+              ${c.class}
+            </div>
+
+            <!-- 하단 오버레이: 역할 / 전투력 / 별 -->
+            <div style="
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 60px;
+              background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+              display: flex;
+              align-items: flex-end;
+              justify-content: space-between;
+              padding: 6px 8px;
+              box-sizing: border-box;
+              font-size: 15px;
               font-weight: bold;
             ">
-              ${starOverlay}
+              <span style="color: white;">${roleLabel}</span>
+              <span style="color: gold;">${c.power} ${starOverlay}</span>
             </div>
           </div>
         `;
@@ -97,9 +119,8 @@ function generateParty() {
           <div style="width: 220px; display: flex; flex-direction: column; align-items: flex-start;">
             ${imageElement}
             <div style="margin-top: 10px; text-align: left;">
-              <p><strong>${role}</strong></p>
-              <p>${c.id} (${c.class})</p>
-              <p>전투력: ${c.power}</p>
+              <p><strong>${roleIcon} ${roleLabel}</strong></p>
+              <p>${c.id}</p>
             </div>
           </div>
         `;
