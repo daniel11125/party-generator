@@ -104,13 +104,19 @@ function generateParty() {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 10px 8px 14px;
+  padding: 10px 8px 24px;
   box-sizing: border-box;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: bold;
 ">
-              <span style="color: white;">${roleLabel}</span>
-              <span style="color: gold;">${c.power} ${starOverlay}</span>
+                <div style="color: white;">${roleIcon} ${roleLabel}</div>
+
+                <div style="color: gold; text-align: right; line-height: 1.2;">
+    <div>${c.power}</div>
+    <div>${starOverlay}</div>
+  </div>
+
+
             </div>
           </div>
         `;
