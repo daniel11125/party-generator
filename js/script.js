@@ -95,20 +95,20 @@ function generateParty() {
 
             <!-- 하단 오버레이: 역할 / 전투력 / 별 -->
             <div style="
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              width: 100%;
-              height: 60px;
-              background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-              display: flex;
-              align-items: flex-end;
-              justify-content: space-between;
-              padding: 6px 8px;
-              box-sizing: border-box;
-              font-size: 15px;
-              font-weight: bold;
-            ">
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 10px 8px 14px;
+  box-sizing: border-box;
+  font-size: 15px;
+  font-weight: bold;
+">
               <span style="color: white;">${roleLabel}</span>
               <span style="color: gold;">${c.power} ${starOverlay}</span>
             </div>
