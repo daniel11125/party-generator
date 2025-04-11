@@ -6,6 +6,7 @@ const roleMap = {
   "딜러": ["검술사", "대검전사", "궁수", "석궁사수", "장궁병", "화염술사", "빙결술사", "수도사", "댄서", "악사", "마법사"]
 };
 
+// ✅ 캐릭터 데이터 불러오기
 fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
   .then(res => res.json())
   .then(data => {
@@ -13,7 +14,7 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
       id: c.id,
       class: c.class,
       power: Number(c.power),
-      thumbnail: c.thumbnail || null  // 썸네일이 없으면 null 처리
+      thumbnail: c.thumbnail || null  // 썸네일 없으면 null 처리
     }));
     console.log("✅ 캐릭터 로딩 완료", characters);
   })
@@ -21,16 +22,19 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
     console.error("❌ 캐릭터 데이터 불러오기 실패", err);
   });
 
+// ✅ 역할 필터링
 function filterByRole(role) {
   return characters.filter(c => roleMap[role].includes(c.class));
 }
 
+// ✅ 중복 없는 랜덤 선택
 function getRandomUnique(arr, count, excluded = []) {
   const available = arr.filter(c => !excluded.includes(c.id));
   const shuffled = available.sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
 
+// ✅ 랜덤 파티 생성
 function generateParty() {
   if (characters.length === 0) {
     alert("⏳ 캐릭터 데이터를 아직 불러오지 못했습니다.");
@@ -53,6 +57,7 @@ function generateParty() {
 
   const totalPower = selected.reduce((sum, c) => sum + c.power, 0);
 
+  // ✅ 출력 HTML 구성
   const html = `
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
       ${selected.map((c, i) => {
