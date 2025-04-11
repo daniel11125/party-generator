@@ -119,7 +119,7 @@ function generatePartyFromDisplayedCards() {
 		  0 0 30px rgba(255, 255, 255, 0.2),
 		  0 0 60px rgba(255, 255, 255, 0.1)
       `;
-	  cardEl.style.animation = "mysticPulse 3s ease-in-out infinite";
+	  cardEl.style.animation = "glowPulse 3s ease-in-out infinite";
 
       // cardEl.style.animation = "rainbowGlow 1.5s infinite ease-in-out";
     }, 600 + i * 200);
@@ -239,7 +239,6 @@ function generateParty() {
 	  card.style.opacity = "1";
 	  card.style.transform = "scale(1.05) rotateY(360deg)";
 	  card.style.zIndex = "10";
-	  card.style.animation = "mysticPulse 3s ease-in-out infinite";
   card.style.border = "1px solid white";
 
 	  card.style.boxShadow = `
@@ -263,6 +262,14 @@ function generateParty() {
   setTimeout(() => {
     partyEl.appendChild(totalEl);
   }, selected.length * 200 + 300);
+
+	setTimeout(() => {
+	  const cards = document.querySelectorAll('.card');
+	  cards.forEach(card => {
+		card.classList.add('glow');
+	  });
+	}, selected.length * 200 + 400); // 살짝 여유 줘도 좋아
+
 }
 
 
@@ -341,6 +348,11 @@ function showAllMembers() {
       card.style.opacity = "1";
       card.style.transform = "scale(1) translateY(0)";
     }, i * 100);
+
+
+
+
+
   });
 }
 
