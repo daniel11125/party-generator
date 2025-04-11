@@ -63,8 +63,8 @@ function generateParty() {
       ${selected.map((c, i) => {
         const role = i < 2 ? "🗡️ 딜러" : i === 2 ? "🛡️ 탱커" : "✨ 힐러";
         const imageElement = c.thumbnail
-          ? `<img src="${c.thumbnail}" alt="${c.id}" width="200" height="200" style="border-radius: 8px; object-fit: cover;" />`
-          : `<div style="width:200px; height:200px; background:#ccc; border-radius:8px;"></div>`;
+          ? `<img src="${c.thumbnail}" alt="${c.id}" width="200" height="320" style="border-radius: 8px; object-fit: cover;" />`
+          : `<div style="width:200px; height:320px; background:#ccc; border-radius:8px;"></div>`;
 
         return `
           <div style="width: 220px; display: flex; flex-direction: column; align-items: flex-start;">
