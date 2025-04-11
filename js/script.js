@@ -14,7 +14,7 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
       id: c.id,
       class: c.class,
       power: Number(c.power),
-      thumbnail: c.thumbnail || null  // 썸네일 없으면 null 처리
+      thumbnail: c.thumbnail || null
     }));
     console.log("✅ 캐릭터 로딩 완료", characters);
   })
@@ -57,14 +57,41 @@ function generateParty() {
 
   const totalPower = selected.reduce((sum, c) => sum + c.power, 0);
 
-  // ✅ 출력 HTML 구성
   const html = `
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
       ${selected.map((c, i) => {
         const role = i < 2 ? "🗡️ 딜러" : i === 2 ? "🛡️ 탱커" : "✨ 힐러";
-        const imageElement = c.thumbnail
-          ? `<img src="${c.thumbnail}" alt="${c.id}" width="200" height="320" style="border-radius: 8px; object-fit: cover;" />`
-          : `<div style="width:200px; height:320px; background:#ccc; border-radius:8px;"></div>`;
+
+        // ⭐ 별 개수 계산
+        let stars = 3;
+        if (c.power >= 19000) stars = 4;
+        if (c.power >= 21000) stars = 5;
+        if (c.power >= 23000) stars = 6;
+        const starOverlay = '★'.repeat(stars);
+
+        // 카드 이미지 + 별 오버레이
+        const imageElement = `
+          <div style="width:200px; height:320px; position: relative; border-radius: 8px; overflow: hidden;">
+            ${
+              c.thumbnail
+                ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
+                : `<div style="width:100%; height:100%; background:#ccc;"></div>`
+            }
+            <div style="
+              position: absolute;
+              bottom: 8px;
+              right: 8px;
+              background: rgba(0,0,0,0.6);
+              color: gold;
+              font-size: 16px;
+              padding: 2px 6px;
+              border-radius: 4px;
+              font-weight: bold;
+            ">
+              ${starOverlay}
+            </div>
+          </div>
+        `;
 
         return `
           <div style="width: 220px; display: flex; flex-direction: column; align-items: flex-start;">
