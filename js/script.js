@@ -5,9 +5,11 @@ let characters = [];
 function showRecallButtonOnly() {
   const newBtn = document.querySelector(".newparty");
   const recallBtn = document.querySelector(".recall");
+  const recallThreeBtn = document.querySelector(".recallthree")
 
   if (newBtn) newBtn.style.display = "none";
   if (recallBtn) recallBtn.style.display = "inline-block";
+  if (recallThreeBtn) recallThreeBtn.style.display = "inline-block"; 
 }
 
 
@@ -32,7 +34,6 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
 	   sp: c.sp || "" 
     }));
     console.log("✅ 캐릭터 로딩 완료", characters);
-console.log(characters.data)
    showAllMembers();
 
   })
@@ -276,6 +277,170 @@ const starOverlay = c.sp === 'use'
 
 }
 
+function generatePartythree() {
+	  console.log("✅ 3연차 버튼 클릭됨");
+
+  generateParties(2); // 
+}
+
+function createCharacterCard(c) {
+  const role = Object.keys(roleMap).find(r => roleMap[r].includes(c.class)) || "기타";
+  const roleIcon = role === "딜러" ? "🗡️" : role === "탱커" ? "🛡️" : "✨";
+
+  let stars = 3;
+  if (c.power >= 19000) stars = 4;
+  if (c.power >= 21000) stars = 5;
+  if (c.power >= 23000) stars = 6;
+
+  const starOverlay = c.sp === 'use'
+    ? `<span class="rainbow-stars">${'★'.repeat(stars)}</span>`
+    : Array.from({ length: stars }, () =>
+        `<span class="star-unit" style="color: gold;">★</span>`).join('');
+
+  const cardWrapper = document.createElement("div");
+  cardWrapper.style.width = "200px";
+  cardWrapper.style.display = "flex";
+  cardWrapper.style.flexDirection = "column";
+  cardWrapper.style.alignItems = "center";
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.style.width = "200px";
+  card.style.height = "320px";
+  card.style.position = "relative";
+  card.style.borderRadius = "8px";
+  card.style.overflow = "hidden";
+  card.style.transition = "all 0.6s ease";
+  card.style.opacity = "0";                      // 등장 전 숨김
+  card.style.transform = "scale(0.7) translateY(50px)";
+
+  const inner = c.thumbnail
+    ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
+    : `<div style="width: 100%; height: 100%; background: #eee; display: flex; justify-content: center; align-items: center;">
+          <img src="./img/logo.svg" alt="default-logo" style="width: 100px; height: auto;">
+       </div>`;
+
+  const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
+  const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
+
+  const messageText = (c.msg && c.msg.trim() !== "") ? c.msg.replaceAll('\n', '<br>') : '....';
+  const messageCenter = `<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  color: white; font-size: 14px; padding: 6px 10px; border-radius: 6px; text-align: center; max-width: 90%; font-family: 'Nanum Myeongjo', 'serif';">&quot;${messageText}&quot;</div>`;
+
+  const bottomOverlay = `
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 140px; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 15px 15px; box-sizing: border-box; font-size: 12px; font-weight: bold;">
+      <div style="color: white; font-size: 13px;">${roleIcon} ${role}</div>
+      <div style="color: gold; text-align: right; line-height: 1.3;">
+        <div style="font-size: 20px; font-style: italic; font-family: 'Nanum Myeongjo';">${c.power}</div>
+        <div>${starOverlay}</div>
+      </div>
+    </div>
+  `;
+
+  card.innerHTML = inner + topLeft + topRight + messageCenter + bottomOverlay;
+  cardWrapper.appendChild(card);
+
+  // 등장 애니메이션 적용
+  setTimeout(() => {
+    card.style.opacity = "1";
+    card.style.transform = "scale(1.05) rotateY(360deg)";
+    card.style.zIndex = "10";
+    card.style.border = "1px solid white";
+    card.style.boxShadow = `
+      0 0 10px rgba(255, 255, 255, 0.4),
+      0 0 30px rgba(255, 255, 255, 0.2),
+      0 0 60px rgba(255, 255, 255, 0.1)
+    `;
+  }, 100 + Math.random() * 300);
+
+  return cardWrapper;
+}
+
+
+
+
+
+function generateParties(num = 2) {
+  if (!characters || characters.length === 0) {
+    alert("⏳ 캐릭터 데이터를 아직 불러오지 못했습니다.");
+    return;
+  }
+
+  const partyEl = document.getElementById("party");
+  partyEl.innerHTML = ""; // 기존 파티 제거
+
+  const usedIds = new Set();
+  const allSelected = [];
+
+  for (let i = 0; i < num; i++) {
+    const dealerList = filterByRole("딜러").filter(c => !usedIds.has(c.id));
+    const tankList = filterByRole("탱커").filter(c => !usedIds.has(c.id));
+    const healerList = filterByRole("힐러").filter(c => !usedIds.has(c.id));
+
+    console.log(`🌀 파티 ${i + 1} 후보 ▶ 딜러:${dealerList.length}, 탱커:${tankList.length}, 힐러:${healerList.length}`);
+
+    // 캐릭터 부족 시 해당 파티만 건너뛴다
+    if (dealerList.length < 2 || tankList.length < 1 || healerList.length < 1) {
+      console.warn(`⛔ 파티 ${i + 1} 스킵됨 (후보 부족)`);
+      continue;
+    }
+
+    const party = [];
+    const dealers = getRandomUnique(dealerList, 2);
+    party.push(...dealers);
+
+    const tank = getRandomUnique(tankList, 1, party.map(c => c.id))[0];
+    const healer = getRandomUnique(healerList, 1, party.map(c => c.id).concat(tank.id))[0];
+    party.push(tank, healer);
+
+    party.forEach(c => usedIds.add(c.id));
+    allSelected.push(party);
+
+    console.log(`✅ 파티 ${i + 1} 구성 완료 ▶`, party.map(c => c.id));
+  }
+
+  if (allSelected.length === 0) {
+    console.error("❌ 생성된 파티가 없습니다.");
+    partyEl.innerHTML = "<p style='text-align:center; color: red;'>⚠️ 생성 가능한 파티가 없습니다.</p>";
+    return;
+  }
+
+  // 파티 렌더링
+  allSelected.forEach((party, index) => {
+    const rowTitle = document.createElement("h3");
+    rowTitle.textContent = `💠 ${index + 1}번 파티`;
+    rowTitle.style.textAlign = "center";
+    rowTitle.style.marginBottom = "10px";
+
+    const row = document.createElement("div");
+    row.className = "party-row";
+    row.style.display = "flex";
+    row.style.justifyContent = "center";
+    row.style.gap = "30px";
+    row.style.marginBottom = "40px";
+
+    party.forEach((c) => {
+      const card = createCharacterCard(c);
+      row.appendChild(card);
+    });
+
+    //partyEl.appendChild(rowTitle);
+    partyEl.appendChild(row);
+  });
+
+  // 총 전투력 표시
+  const totalPower = allSelected.flat().reduce((sum, c) => sum + c.power, 0);
+  const totalEl = document.createElement("p");
+  totalEl.style.textAlign = "center";
+  totalEl.style.marginTop = "20px";
+  totalEl.innerHTML = `<strong>⚔️ 총 전투력: ${totalPower}</strong>`;
+  partyEl.appendChild(totalEl);
+
+
+console.log("🎨 최종 렌더링된 파티 DOM:", partyEl.innerHTML);
+
+
+}
+
 
 
 
@@ -299,63 +464,63 @@ function showAllMembers() {
     if (c.power >= 21000) stars = 5;
     if (c.power >= 23000) stars = 6;
 
-const starOverlay = c.sp === 'use'
-  ? `<span class="rainbow-stars">${'★'.repeat(stars)}</span>`
-  : getGoldStars(stars);
+	const starOverlay = c.sp === 'use'
+	  ? `<span class="rainbow-stars">${'★'.repeat(stars)}</span>`
+	  : getGoldStars(stars);
 
 
-    const cardWrapper = document.createElement("div");
-    cardWrapper.style.width = "200px";
-    cardWrapper.style.display = "flex";
-    cardWrapper.style.flexDirection = "column";
-    cardWrapper.style.alignItems = "center";
+		const cardWrapper = document.createElement("div");
+		cardWrapper.style.width = "200px";
+		cardWrapper.style.display = "flex";
+		cardWrapper.style.flexDirection = "column";
+		cardWrapper.style.alignItems = "center";
 
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.width = "200px";
-    card.style.height = "320px";
-    card.style.position = "relative";
-    card.style.borderRadius = "8px";
-    card.style.overflow = "hidden";
-    card.style.opacity = "0";
-    card.style.transform = "scale(0.7) translateY(50px)";
-    card.style.transition = "all 0.6s ease";
-
-
-
-	const inner = c.thumbnail
-	  ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
-	  : `
-		<div style="width: 100%; height: 100%; background: #eee; display: flex; justify-content: center; align-items: center;">
-		  <img src="./img/logo.svg" alt="default-logo" style="width: 100px; height: auto;">
-		</div>
-	  `;
+		const card = document.createElement("div");
+		card.className = "card";
+		card.style.width = "200px";
+		card.style.height = "320px";
+		card.style.position = "relative";
+		card.style.borderRadius = "8px";
+		card.style.overflow = "hidden";
+		card.style.opacity = "0";
+		card.style.transform = "scale(0.7) translateY(50px)";
+		card.style.transition = "all 0.6s ease";
 
 
-    const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
-    const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
 
-    const messageText = (c.msg && c.msg.trim() !== "") ? c.msg.split('\n').join('<br>') : '....';
-    const messageCenter = c.msg ? `<div style="min-width: 120px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; padding: 6px 10px; border-radius: 6px; text-align: center; max-width: 90%; font-family: 'Nanum Myeongjo', 'serif';">&quot;${messageText}&quot;</div>` : "";
+		const inner = c.thumbnail
+		  ? `<img src="${c.thumbnail}" alt="${c.id}" style="width: 100%; height: 100%; object-fit: cover;">`
+		  : `
+			<div style="width: 100%; height: 100%; background: #eee; display: flex; justify-content: center; align-items: center;">
+			  <img src="./img/logo.svg" alt="default-logo" style="width: 100px; height: auto;">
+			</div>
+		  `;
 
-    const bottomOverlay = `
-      <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 140px; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 15px 15px; box-sizing: border-box; font-size: 12px; font-weight: bold;">
-        <div style="color: white; font-size: 13px;">${roleIcon} ${roleLabel}</div>
-        <div style="color: gold; text-align: right; line-height: 1.3;">
-          <div style="font-size: 20px; font-style: italic; font-family: 'Nanum Myeongjo';">${c.power}</div>
-          <div>${starOverlay}</div>
-        </div>
-      </div>
-    `;
 
-    card.innerHTML = inner + topLeft + topRight + messageCenter + bottomOverlay;
-    cardWrapper.appendChild(card);
-    container.appendChild(cardWrapper);
+		const topLeft = `<div style="position: absolute; top: 12px; left: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.class}</div>`;
+		const topRight = `<div style="position: absolute; top: 12px; right: 15px; background: rgba(0, 0, 0, 0.5); color: white; font-size: 13px; padding: 2px 6px; border-radius: 4px;">${c.id}</div>`;
 
-    setTimeout(() => {
-      card.style.opacity = "1";
-      card.style.transform = "scale(1) translateY(0)";
-    }, i * 100);
+		const messageText = (c.msg && c.msg.trim() !== "") ? c.msg.split('\n').join('<br>') : '....';
+		const messageCenter = c.msg ? `<div style="min-width: 120px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 14px; padding: 6px 10px; border-radius: 6px; text-align: center; max-width: 90%; font-family: 'Nanum Myeongjo', 'serif';">&quot;${messageText}&quot;</div>` : "";
+
+		const bottomOverlay = `
+		  <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 140px; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); display: flex; align-items: flex-end; justify-content: space-between; padding: 10px 15px 15px; box-sizing: border-box; font-size: 12px; font-weight: bold;">
+			<div style="color: white; font-size: 13px;">${roleIcon} ${roleLabel}</div>
+			<div style="color: gold; text-align: right; line-height: 1.3;">
+			  <div style="font-size: 20px; font-style: italic; font-family: 'Nanum Myeongjo';">${c.power}</div>
+			  <div>${starOverlay}</div>
+			</div>
+		  </div>
+		`;
+
+		card.innerHTML = inner + topLeft + topRight + messageCenter + bottomOverlay;
+		cardWrapper.appendChild(card);
+		container.appendChild(cardWrapper);
+
+		setTimeout(() => {
+		  card.style.opacity = "1";
+		  card.style.transform = "scale(1) translateY(0)";
+		}, i * 100);
 
 
 
