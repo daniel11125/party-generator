@@ -88,29 +88,54 @@ body {
   animation: glowPulse 3s ease-in-out infinite alternate;
 }
 
+.star-unit {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1;
+  margin: 0 1px;
+  font-family: 'Nanum Myeongjo', serif;
+}
 
-@keyframes rainbowGlow {
+@keyframes glowTwinkle {
   0%, 100% {
-    box-shadow:
-      0 0 10px red,
-      0 0 20px orange,
-      0 0 30px yellow,
-      0 0 40px green,
-      0 0 50px blue,
-      0 0 60px indigo,
-      0 0 70px violet;
+    text-shadow: 0 0 5px rgba(255,255,255,0.3);
+    transform: scale(1);
   }
   50% {
-    box-shadow:
-      0 0 4px red,
-      0 0 8px orange,
-      0 0 12px yellow,
-      0 0 16px green,
-      0 0 20px blue,
-      0 0 24px indigo,
-      0 0 28px violet;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7);
+    transform: scale(1);
   }
 }
+.glow-star {
+  animation: glowTwinkle 2s infinite ease-in-out;
+}
+
+
+.rainbow-stars {
+  display: inline-block;
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 14px;
+  line-height: 1;
+  font-family: 'Nanum Myeongjo', serif;
+  text-shadow: 0 0 10px rgba(255,255,255,0.3);
+  animation: rainbowFlow 4s ease-in-out infinite;
+}
+
+@keyframes rainbowFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
 
 #party {

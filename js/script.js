@@ -28,10 +28,11 @@ fetch("https://api.sheetbest.com/sheets/776e2812-99b8-4f67-ae74-4b0fa2d6a060")
       class: c.class,
       power: Number(c.power),
       thumbnail: c.thumbnail || null,
-      msg: c.msg || ""
+      msg: c.msg || "",
+	   sp: c.sp || "" 
     }));
     console.log("✅ 캐릭터 로딩 완료", characters);
-
+console.log(characters.data)
    showAllMembers();
 
   })
@@ -187,7 +188,10 @@ function generateParty() {
     if (c.power >= 19000) stars = 4;
     if (c.power >= 21000) stars = 5;
     if (c.power >= 23000) stars = 6;
-    const starOverlay = '★'.repeat(stars);
+
+const starOverlay = c.sp === 'use'
+  ? `<span class="rainbow-stars">${'★'.repeat(stars)}</span>`
+  : getGoldStars(stars);
 
     const cardWrapper = document.createElement("div");
     cardWrapper.style.width = "200px";
@@ -239,7 +243,7 @@ function generateParty() {
 	  card.style.opacity = "1";
 	  card.style.transform = "scale(1.05) rotateY(360deg)";
 	  card.style.zIndex = "10";
-  card.style.border = "1px solid white";
+	card.style.border = "1px solid white";
 
 	  card.style.boxShadow = `
             0 0 10px rgba(255, 255, 255, 0.4),
@@ -294,7 +298,11 @@ function showAllMembers() {
     if (c.power >= 19000) stars = 4;
     if (c.power >= 21000) stars = 5;
     if (c.power >= 23000) stars = 6;
-    const starOverlay = '★'.repeat(stars);
+
+const starOverlay = c.sp === 'use'
+  ? `<span class="rainbow-stars">${'★'.repeat(stars)}</span>`
+  : getGoldStars(stars);
+
 
     const cardWrapper = document.createElement("div");
     cardWrapper.style.width = "200px";
@@ -356,3 +364,21 @@ function showAllMembers() {
   });
 }
 
+function getGoldStars(stars) {
+  return Array.from({ length: stars }, () => 
+    `<span class="star-unit" style="color: gold;">★</span>`).join('');
+}
+
+function getAnimatedStars(stars) {
+  const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+  let html = '';
+
+  for (let i = 0; i < stars; i++) {
+    const color = colors[i % colors.length];
+    html += `
+      <span class="star-unit glow-star" style="color: ${color}; animation-delay: ${i * 0.2}s;">★</span>
+    `;
+  }
+
+  return html;
+}
