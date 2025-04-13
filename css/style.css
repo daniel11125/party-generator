@@ -88,6 +88,8 @@ body {
   animation: glowPulse 3s ease-in-out infinite alternate;
 }
 
+#
+
 .star-unit {
   display: inline-block;
   font-size: 12px;
@@ -141,6 +143,7 @@ body {
 #party {
   margin-top: 2rem;
   line-height: 1.6;
+  margin-bottom: 1rem;
 }
 
   .card-skeleton {
