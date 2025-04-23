@@ -547,3 +547,46 @@ function getAnimatedStars(stars) {
 
   return html;
 }
+
+
+async function generatePartyKakao() {
+  const url = "https://violetfx-party-middlewar-production.up.railway.app/party";
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("네트워크 응답 실패");
+
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      alert("🔍 카카오 파티 데이터가 없습니다.");
+      return;
+    }
+
+    const kakaoMembers = data[0].members.map(m => m.trim()); // 멤버명 공백 제거
+
+    // 캐릭터 중 멤버 이름과 일치하는 것만 필터링
+    const filteredCharacters = characters.filter(c => kakaoMembers.includes(c.id));
+
+    const partyEl = document.getElementById("party");
+    partyEl.innerHTML = `<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;"></div>`;
+    const container = partyEl.firstElementChild;
+
+    filteredCharacters.forEach(c => {
+      const card = createCharacterCard(c);
+      container.appendChild(card);
+    });
+
+    const totalPower = filteredCharacters.reduce((sum, c) => sum + c.power, 0);
+    const totalEl = document.createElement("p");
+    totalEl.style.textAlign = "center";
+    totalEl.style.marginTop = "30px";
+    totalEl.innerHTML = `<strong>⚔️ 총 전투력: ${totalPower}</strong>`;
+    partyEl.appendChild(totalEl);
+
+    console.log("🟡 카카오 연동 파티:", kakaoMembers, filteredCharacters);
+  } catch (err) {
+    console.error("❌ 카카오 파티 불러오기 실패:", err);
+    alert("❌ 카카오 파티 데이터를 불러오지 못했습니다.");
+  }
+}
+
