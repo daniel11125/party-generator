@@ -547,3 +547,83 @@ function getAnimatedStars(stars) {
 
   return html;
 }
+
+
+async function generatePartyKakao() {
+  const url = "https://violetfx-party-middlewar-production.up.railway.app/party";
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("네트워크 응답 실패");
+
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      alert("🔍 카카오 파티 데이터가 없습니다.");
+      return;
+    }
+
+    const partyEl = document.getElementById("party");
+    partyEl.innerHTML = ""; // 기존 내용 제거
+
+    data.forEach((partyData, index) => {
+      const kakaoMembers = partyData.members.map(m => m.trim());
+
+      // 해당 파티 멤버 중 전투력 높은 캐릭터만 남기기
+      const filteredCharacters = deduplicateByIdKeepHighestPower(
+        characters.filter(c => kakaoMembers.includes(c.id))
+      );
+
+      // 파티 제목
+      const title = document.createElement("h3");
+      title.textContent = `💠 파티장: ${partyData.host.trim()}`;
+      title.style.textAlign = "center";
+      title.style.marginBottom = "10px";
+
+      // 카드 컨테이너
+      const container = document.createElement("div");
+      container.className = "party-row";
+      container.style.display = "flex";
+      container.style.flexWrap = "wrap";
+      container.style.justifyContent = "center";
+      container.style.gap = "20px";
+      container.style.marginBottom = "40px";
+
+      filteredCharacters.forEach(c => {
+        const card = createCharacterCard(c);
+        container.appendChild(card);
+      });
+
+      // 파티 전투력 표시
+      const totalPower = filteredCharacters.reduce((sum, c) => sum + c.power, 0);
+      const totalEl = document.createElement("p");
+      totalEl.style.textAlign = "center";
+      totalEl.style.marginBottom = "30px";
+      totalEl.innerHTML = `<strong>⚔️ 총 전투력: ${totalPower}</strong>`;
+
+      // 렌더링
+      partyEl.appendChild(title);
+      partyEl.appendChild(container);
+      partyEl.appendChild(totalEl);
+    });
+
+    console.log("🟡 카카오 연동 전체 파티 렌더링 완료");
+
+  } catch (err) {
+    console.error("❌ 카카오 파티 불러오기 실패:", err);
+    alert("❌ 카카오 파티 데이터를 불러오지 못했습니다.");
+  }
+}
+
+
+function deduplicateByIdKeepHighestPower(characters) {
+  const map = new Map();
+
+  characters.forEach(c => {
+    const existing = map.get(c.id);
+    if (!existing || c.power > existing.power) {
+      map.set(c.id, c);
+    }
+  });
+
+  return Array.from(map.values());
+}
